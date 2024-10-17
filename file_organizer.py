@@ -32,7 +32,7 @@ fileFormat = {
 "Audio": [".aac", ".aa", ".aac", ".dvf",
           ".m4a", ".m4b", ".m4p", ".mp3",
            ".msv", "ogg", "oga", ".raw", 
-          ".vox", ".wav", ".wma"],
+          ".vox", ".wav", ".wma", "aiff"],
 
 "Torrent":[".srt",".torrent"],
 
@@ -69,21 +69,21 @@ def organizer(directory):
             destination = directory + "Other"
             
             if fileFormatType == "":
-                print(f" {src} has no file Format")
+                print(f"{src} has no file Format")
             else:
                 for formats in fileFormats:
                     
                     if fileFormatType in formats:
                         folder = fileTypes[fileFormats.index(formats)]
                         
-                        if os.path.isdir(directory+folder) == False:
-                            os.mkdir(directory+folder)
+                        if os.path.isdir(directory + folder) == False:
+                            os.mkdir(directory + folder)
                         destination = directory + folder 
                         
                 else:
                     if os.path.isdir("Other") == False:
-                        os.mkdir("Other")
-                print(src, "moved to ", destination, ",")
+                        os.mkdir(destination + "Other")
+                print(src, "  ----------moved to-------->  ", destination, ",")
                 try:
                     shutil.move(src, destination)
                 except:
