@@ -2,6 +2,10 @@ import os
 import pathlib
 import shutil
 
+'''
+Different type of file formats
+'''
+
 fileFormat = {
 "Web": [".html5", ".html", ".htm", ".xhtml",".csv",".webp",".acsm"],
 
@@ -17,7 +21,7 @@ fileFormat = {
               ".ods", ".odt", ".pwi", ". xsn",
               ". xps" , ".dotx", ".docm", ".dox",
               ".rvg", ".rtf", ".rtfd", ".wpd",
-              ".xls", ".xlsx", ".ppt", "pptx"],
+              ".xls", ".xlsx", ".ppt", "pptx" , ".md"],
 "PPT" : [".pptx"],
 
 "Compressed": [".a", ".ar", ".cpio", ".iso",
@@ -51,35 +55,66 @@ fileFormat = {
 fileTypes = list(fileFormat.keys())
 fileFormats= list(fileFormat.values())
 
-# print(fileFormats)
-# print(fileTypes)
-
-for file in os.scandir():
-    fileName = pathlib.Path(file)
-    fileFormatType = fileName.suffix.lower()
-    if (fileName != "file_organizer" and fileFormatType != ".py"):
-        src = str(fileName)
-        destination = "Other"
-        if fileFormatType == "":
-            print(f" {src} has no file Format")
-        else:
-            for formats in fileFormats:
-                if fileFormatType in formats:
-                    folder = fileTypes[fileFormats.index(formats)]
-                    print(folder)
-                    if os.path.isdir(folder) == False:
-                        os.mkdir(folder)
-                    destination = folder
-            else :
-                if os.path.isdir("Other") == False:
-                    os.mkdir("Other")
-            print(src,"moved to ",destination,"!")
-            try:
-                shutil.move(src,destination) 
-            except:
-                continue
-    else:
-        pass
+def organizer(directory):
     
-print("File organizer started")  
-input("\nPress Enter to exit")         
+    files_of_the_folder = os.listdir(directory)
+    directory += '/'
+    
+    for file in files_of_the_folder:
+        fileName = pathlib.Path(file)
+        fileFormatType = fileName.suffix.lower()
+        
+        if (fileName != "file_organizer" and fileFormatType != ".py"): #to exclude file_organizer.py file
+            src = directory + str(fileName)
+            destination = directory + "Other"
+            
+            if fileFormatType == "":
+                print(f" {src} has no file Format")
+            else:
+                for formats in fileFormats:
+                    
+                    if fileFormatType in formats:
+                        folder = fileTypes[fileFormats.index(formats)]
+                        
+                        if os.path.isdir(directory+folder) == False:
+                            os.mkdir(directory+folder)
+                        destination = directory + folder 
+                        
+                else:
+                    if os.path.isdir("Other") == False:
+                        os.mkdir("Other")
+                print(src, "moved to ", destination, ",")
+                try:
+                    shutil.move(src, destination)
+                except:
+                    continue
+        else:
+            pass
+        
+    print("Files are organized.... files with uncommon extensions might be store in 'Others' folder. Please Check....")
+
+
+while(True):
+    choices = input("Would you like to organize: \n1. Current file directory?(type 1/Y) \n2. Different directory?(type 2/N) \n3. Type '3/exit' to exit \nYOUR CHOICE : ")
+    print()
+    if choices.upper() == 'Y' or choices == '1' :
+        organizer(os.getcwd())
+        break
+
+    elif choices.upper() == 'N' or choices == '2':
+        path = input("Specify the path of the Directory(Folder) you want to organize : ")
+        if os.path.exists(path):
+            print(" The path exists.\n")
+            organizer(path)
+            break
+        
+        else:
+            print("The path does not exist.\n")
+            continue
+        
+    elif choices.upper() == 'EXIT' or choices == '3':
+        print("Exiting...")
+        break
+    else:
+        continue
+
